@@ -19,14 +19,14 @@ public class PeopleRepository {
     private final RestTemplate restTemplate;
     private static final String PATH = "https://swapi.dev/api/people/";
 
-    public List<People> findAll( int page ){
+    public ResponseWrapper<People> findAll( int page ){
         try {
             String res = restTemplate.getForObject(PATH + "?page="+ page + "&format=json", String.class );
             Type type = new TypeToken<ResponseWrapper<People>>(){}.getType();
             ResponseWrapper<People> peopleResData = new Gson().fromJson(res, type);
-            return peopleResData.getResults();
+            return peopleResData;
         }catch (Exception e){
-            return List.of();
+            return null;
         }
 
     }

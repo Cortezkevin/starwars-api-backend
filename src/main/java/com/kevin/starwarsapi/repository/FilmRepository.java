@@ -20,11 +20,11 @@ public class FilmRepository {
     private final RestTemplate restTemplate;
     private static final String PATH = "https://swapi.dev/api/films/";
 
-    public List<Film> findAll(){
+    public ResponseWrapper<Film> findAll(){
         String res = restTemplate.getForObject(PATH + "?format=json", String.class );
         Type type = new TypeToken<ResponseWrapper<Film>>(){}.getType();
         ResponseWrapper<Film> filmResData = new Gson().fromJson(res, type);
-        return filmResData.getResults();
+        return filmResData;
     }
 
     public Optional<Film> findById(int id ){

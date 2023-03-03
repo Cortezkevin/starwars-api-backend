@@ -3,6 +3,7 @@ package com.kevin.starwarsapi.service;
 import com.kevin.starwarsapi.dto.PeopleDTO;
 import com.kevin.starwarsapi.exception.FilmNotFoundException;
 import com.kevin.starwarsapi.model.People;
+import com.kevin.starwarsapi.model.ResponseWrapper;
 import com.kevin.starwarsapi.repository.PeopleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -17,17 +18,25 @@ public class PeopleService {
 
     private final PeopleRepository repository;
 
-    public List<PeopleDTO> getAll( int page ){
-        return repository.findAll( page ).stream().map(people -> PeopleDTO.parseToDTO( people ) ).collect(Collectors.toList());
+    public ResponseWrapper<PeopleDTO> getAll( int page ){
+        ResponseWrapper<People> responseWrapper = repository.findAll( page );
+        List<PeopleDTO> peopleDTOList = responseWrapper.getResults().stream().map( p -> PeopleDTO.parseToDTO( p )).collect(Collectors.toList());
+        ResponseWrapper<PeopleDTO> peopleDTOResponseWrapper = ResponseWrapper.<PeopleDTO>builder()
+                .count( responseWrapper.getCount() )
+                .next( responseWrapper.getNext())
+                .previous( responseWrapper.getPrevious())
+                .results( peopleDTOList )
+                .build();
+        return peopleDTOResponseWrapper;
     }
 
     @SneakyThrows
-    public PeopleDTO getById(int id ){
+    public People getById(int id ){
         People people = repository.findById( id ).orElse( null );
         if( people == null ){
-            throw new FilmNotFoundException("No se encontro el Film");
+            throw new FilmNotFoundException("No se encontro el personaje con id " + id);
         }
-        return PeopleDTO.parseToDTO( people );
+        return people;
     }
 
 }

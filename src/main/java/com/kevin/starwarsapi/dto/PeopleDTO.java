@@ -19,8 +19,9 @@ public class PeopleDTO {
     private String mass;
     private String birth_year;
     private String gender;
+    private String url;
 
     public static PeopleDTO parseToDTO( People people ){
-        return PeopleDTO.builder().name(people.getName()).height(people.getHeight()).mass(people.getMass()).birth_year(people.getBirth_year()).gender(people.getGender()).build();
+        return PeopleDTO.builder().name(people.getName()).height(people.getHeight()).mass(people.getMass()).birth_year(people.getBirth_year()).gender(people.getGender()).url(people.getUrl()).build();
     }
 }
